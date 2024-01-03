@@ -13,18 +13,13 @@ public:
     int numberOfBeams(vector<string>& bank) {
         int n = bank.size();
         int numberOfBeam = 0;
-        int lastSeenSecurityWallCount = 0;
-        vector<int> securityWalls(n);
+        int lastSeenSecurityWalls = 0;
+        int securityWalls = 0;
         for(int i = 0; i < n;  i++){
-            securityWalls[i] = numberOfSecurityWallsInCurrentRow(bank[i]);
-            // cout << securityWalls[i] << endl;
-        }
-        for(int i = n - 1; i > 0; i --){
-            numberOfBeam += securityWalls[i] * securityWalls[i - 1];
-            lastSeenSecurityWallCount = securityWalls[i] == 0 ? lastSeenSecurityWallCount : securityWalls[i];
-            if(securityWalls[i] == 0 && securityWalls[i-1]){
-                numberOfBeam += securityWalls[i - 1] * lastSeenSecurityWallCount;
-                lastSeenSecurityWallCount = 0;
+            securityWalls = numberOfSecurityWallsInCurrentRow(bank[i]);
+            if(securityWalls > 0){
+                numberOfBeam += lastSeenSecurityWalls * securityWalls;
+                lastSeenSecurityWalls = securityWalls;
             }
         }
 
