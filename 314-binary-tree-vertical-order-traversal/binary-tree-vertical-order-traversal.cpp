@@ -21,7 +21,7 @@ public:
 
         while(!q.empty()){
             int size = q.size();
-            for(int i = 0; i < size; i ++){
+            // for(int i = 0; i < size; i ++){
                 TreeNode* curr = q.front().first;
                 int dir = q.front().second;
                 q.pop();
@@ -31,7 +31,7 @@ public:
                     q.push({curr->left, dir - 1});
                 if(curr->right)
                     q.push({curr->right, dir + 1});
-            }
+            // }
         }
         for(auto i : map){
             res.push_back(i.second);
