@@ -7,6 +7,7 @@
  *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
  * };
  */
+ // Recusive solution
 class Solution {
 private:
     TreeNode* ans = new TreeNode(-1);
@@ -24,8 +25,35 @@ private:
         return (left + mid + right) > 0;
     }
 public:
+    // TreeNode* lowestCommonAncestor(TreeNode* root, TreeNode* p, TreeNode* q) {
+    //     recursiveTree(root, p, q);
+    //     return ans;
+    // }
     TreeNode* lowestCommonAncestor(TreeNode* root, TreeNode* p, TreeNode* q) {
-        recursiveTree(root, p, q);
-        return ans;
+        stack<TreeNode*> stack;
+        unordered_map<TreeNode*, TreeNode*> parents;
+        parents[root] = NULL;
+        stack.push(root);
+        while(parents.find(p) == parents.end() || parents.find(q) == parents.end()){
+            TreeNode* node = stack.top();
+            stack.pop();
+            if(node->left){
+                parents[node->left] = node;
+                stack.push(node->left);
+            }
+            if(node->right){
+                parents[node->right] = node;
+                stack.push(node->right);
+            }
+        }
+        unordered_set<TreeNode*> ancestors;
+        while(p != NULL){
+            ancestors.insert(p);
+            p = parents[p];
+        }
+        while(ancestors.find(q) == ancestors.end()){
+            q = parents[q];
+        }
+        return q;
     }
 };
