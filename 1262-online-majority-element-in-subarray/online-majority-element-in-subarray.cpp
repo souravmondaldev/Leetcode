@@ -1,34 +1,37 @@
-
-
 class MajorityChecker {
-    vector<int>arr;
-    map<pair<int,int>,pair<int,int>>cache;
-public:    
+private:
+    vector<int> voters;
+    map<pair<int, int>, pair<int, int>> rangeBaseVoteCountAndWinner;
+public:
     MajorityChecker(vector<int>& arr) {
-        this->arr=arr;
+        voters = arr;
     }
+    
     int query(int left, int right, int threshold) {
-        if(cache.find({left,right})!=cache.end()){
-            return cache[{left,right}].first>=threshold?cache[{left,right}].second:-1;
+        if(rangeBaseVoteCountAndWinner.find({left, right}) != rangeBaseVoteCountAndWinner.end()){
+            if(rangeBaseVoteCountAndWinner[{left, right}].second >= threshold)
+                return rangeBaseVoteCountAndWinner[{left, right}].first;
+            else return -1;
         }
-        int element = -1;
-        int vote = 0;
-        for(int i=left;i<=right;i++){
-            if(!vote){
-                element = arr[i];
-            }
-            if(element == arr[i])
-                vote++;
-            else
-                vote--;
+        int vote = 0, winner = -1;
+        for(int i = left; i <= right; i++){
+            if(vote == 0){
+                winner = voters[i];
+            } 
+           
+            if(winner == voters[i])
+                vote ++;
+            else vote --;
         }
-        int count = 0;
-        for(int i = left; i<=right; i++){
-            if(arr[i] == element)
-                count++;
+        int majotVoteCount = 0;
+        for(int i = left; i <= right; i++){
+            if(voters[i] == winner)
+                majotVoteCount ++;
         }
-        cache[{left,right}] = {count, element};
-        return count>=threshold?element:-1;
+        rangeBaseVoteCountAndWinner[{left, right}] = {winner, majotVoteCount};
+        if(majotVoteCount >= threshold)
+            return winner;
+        else return -1;
     }
 };
 
