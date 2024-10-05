@@ -1,12 +1,14 @@
 class Solution {
 public:
     int climbStairs(int n) {
-        int wayToReachLastStep = 2, waysToReachSecondLast = 1, numOfWays = n;
+        if(n <= 2)
+            return n;
+        int first = 1, second = 2, curr = 0;
         for(int i = 3; i <= n; i ++){
-            numOfWays = wayToReachLastStep + waysToReachSecondLast;
-            waysToReachSecondLast = wayToReachLastStep;
-            wayToReachLastStep = numOfWays;
+            curr = first + second;
+            first = second;
+            second = curr;
         }
-        return numOfWays;
+        return curr;
     }
 };
