@@ -8,12 +8,10 @@ public:
         priority_queue<int, vector<int>, greater<int>> scheduler;
         scheduler.push(intervals[0][1]);
         for(int i = 1; i < intervals.size(); i ++){
-            // if(scheduler.size()){
-                int currMeetingEndTime = scheduler.top();
-                if(currMeetingEndTime <= intervals[i][0])
-                    scheduler.pop();
-                scheduler.push(intervals[i][1]);
-            // }
+            int currMeetingEndTime = scheduler.top();
+            if(currMeetingEndTime <= intervals[i][0])
+                scheduler.pop();
+            scheduler.push(intervals[i][1]);
         }
         return scheduler.size();
     }
