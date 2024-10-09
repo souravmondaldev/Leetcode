@@ -2,15 +2,17 @@ class Solution {
 public:
     // Time O(N) Space O(1)
     int minAddToMakeValid(string s) {
-        int leftBalance = 0, rightBalance = 0;
+        int rightOpening = 0, leftOpening = 0;
         for(char ch : s){
-            leftBalance += ch == '(' ? 1 : -1;
-            if(leftBalance == -1){
-                rightBalance ++;
-                leftBalance = 0;
+            if(ch == '(')
+                leftOpening ++;
+            else {
+                if(leftOpening > 0)
+                    leftOpening --;
+                else rightOpening ++;
             }
+            
         }
-
-        return leftBalance + rightBalance;
+        return leftOpening + rightOpening;
     }
 };
