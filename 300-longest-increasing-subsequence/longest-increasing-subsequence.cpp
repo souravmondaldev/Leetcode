@@ -33,8 +33,39 @@ public:
         }
         return minNumsList.size();
     }
+    //O(NLogN) O(N)
+    int lengthOfLISDpOptimalBirnary(vector<int>& nums){
+        vector<int> minNumsList;
+        minNumsList.push_back(nums[0]);
+        int idx = 1, n = nums.size();
+        while(idx < n){
+            if(nums[idx] > minNumsList[minNumsList.size() - 1]){
+                minNumsList.push_back(nums[idx]);
+            }
+            else {
+                int j = lowerBoundBinarySearch(minNumsList, nums[idx]);
+                minNumsList[j] = nums[idx];
+            }
+            idx ++;
+        }
+        return minNumsList.size();
+    }
+    int lowerBoundBinarySearch(vector<int> &nums, int num){
+        int left = 0, right = nums.size() - 1;
+        int idx = right;
+        while(left <= right){
+            int mid = left + (right - left) / 2;
+            if(nums[mid] >= num){
+                right = mid - 1;
+                idx = mid;
+            }
+            else left = mid + 1;
+        }
+        return idx;
+    }
     int lengthOfLIS(vector<int>& nums) {
         // return lengthOfLISDp(nums);
-        return lengthOfLISDpOptimal(nums);
+        // return lengthOfLISDpOptimal(nums);
+        return lengthOfLISDpOptimalBirnary(nums);
     }
 };
