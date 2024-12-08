@@ -27,25 +27,46 @@ public:
     //     return ans;
 
     // }
+    // vector<int> topKFrequent(vector<int>& nums, int k) {
+    //     //Priority queue O(NLogK) O(N + K) MAXHEAP SOLUTION
+    //     unordered_map<int, int> counts;
+    //     vector<int> ans;
+    //     priority_queue<pair<int, int>> pq;
+    //     int maxFreq = 0;
+    //     //Store the frequencies inside a Map for O(1) access
+    //     for(int num : nums){
+    //         ++ counts[num];
+    //         maxFreq = max(maxFreq, counts[num]);
+    //     }
+    //     for(auto& count: counts){
+    //         pq.push({count.second, count.first});
+    //     }
+    //     for(int i = 0 ; i < k; i ++){
+    //         ans.push_back(pq.top().second);
+    //         pq.pop();
+    //     }
+
+    //     return ans;
+
+    // }
     vector<int> topKFrequent(vector<int>& nums, int k) {
         //Priority queue O(NLogK) O(N + K)
-        unordered_map<int, int> counts;
+        unordered_map<int, int> mp;
         vector<int> ans;
-        priority_queue<pair<int, int>> pq;
-        int maxFreq = 0;
-        //Store the frequencies inside a Map for O(1) access
+        priority_queue<pair<int, int>, vector<pair<int, int>>, greater<pair<int, int>>> pq;
         for(int num : nums){
-            ++ counts[num];
-            maxFreq = max(maxFreq, counts[num]);
+            mp[num] ++;
         }
-        for(auto& count: counts){
-            pq.push({count.second, count.first});
+        for(auto it : mp){
+            pq.push({it.second, it.first});
+            if(pq.size() > k){
+                pq.pop();
+            }
         }
-        for(int i = 0 ; i < k; i ++){
+        while(!pq.empty()){
             ans.push_back(pq.top().second);
             pq.pop();
         }
-
         return ans;
 
     }
