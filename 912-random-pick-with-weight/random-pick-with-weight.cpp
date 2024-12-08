@@ -11,12 +11,8 @@ public:
     int pickIndex() {
         float randNum = (float) rand()/RAND_MAX;
         float target = prefixSum.back() * randNum;
-        for(int i = 0; i < prefixSum.size(); i ++){
-            if(target < prefixSum[i]){
-                return i;
-            }
-        }
-        return prefixSum.size() - 1;
+        
+        return lower_bound(begin(prefixSum), end(prefixSum), target) - begin(prefixSum);
     }
 };
 
