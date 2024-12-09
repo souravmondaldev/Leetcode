@@ -26,6 +26,7 @@ public:
         }
         int currentUsedRoom = 0;
         for(auto schedule : schedules){
+            cout << schedule.first << " ; " << schedule.second << endl;
             currentUsedRoom += schedule.second;
             maxUsedRoom = max(maxUsedRoom, currentUsedRoom);
         }
