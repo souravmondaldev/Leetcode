@@ -1,11 +1,22 @@
 class Solution {
 public:
     int minCost(vector<vector<int>>& costs) {
-        if (costs.empty()) return 0;
-        vector<vector<int>> memo(costs.size(), vector<int>(3, -1));
-        return min(recur(costs, 0, 0, memo), 
-                   min(recur(costs, 0, 1, memo), 
-                       recur(costs, 0, 2, memo)));
+        // if (costs.empty()) return 0;
+        // vector<vector<int>> memo(costs.size(), vector<int>(3, -1));
+        // return min(recur(costs, 0, 0, memo), 
+        //            min(recur(costs, 0, 1, memo), 
+        //                recur(costs, 0, 2, memo)));
+        int prevRed = costs[0][0], prevBlue = costs[0][1], prevGreen = costs[0][2];
+        int currRed = 0, currBlue = 0, currGreen = 0;
+        for(int i = 1; i < costs.size(); i ++){
+            currRed = costs[i][0] + min(prevBlue, prevGreen);
+            currBlue = costs[i][1] + min(prevRed, prevGreen);
+            currGreen = costs[i][2] + min(prevBlue, prevRed);
+            prevRed = currRed;
+            prevBlue = currBlue;
+            prevGreen = currGreen;
+        }
+        return min(prevGreen, min(prevBlue, prevRed));
     }
 
 private:
