@@ -26,8 +26,8 @@ public:
         for(int num : nums){
             for(int i = 2; i*i <= num; i ++){
                 if(num % i == 0){
-                    unionDsu(num, i);
-                    unionDsu(num/i, i);
+                    unionDsu(i, num);
+                    unionDsu(i, num/i);
                 }
             }
         }
