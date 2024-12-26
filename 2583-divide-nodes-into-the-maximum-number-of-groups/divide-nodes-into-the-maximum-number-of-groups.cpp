@@ -43,6 +43,7 @@ public:
             if (groupSize == -1) {
                 return -1; // Invalid graph structure
             }
+            // cout << i << " parent " << find(i) << " maxGroups[root] " << maxGroups[root] << " groups " << groupSize <<endl;
             maxGroups[root] = max(maxGroups[root], groupSize);
         }
 
