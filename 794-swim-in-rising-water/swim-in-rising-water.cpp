@@ -27,7 +27,6 @@ public:
                         int maxDepth = max(-time, grid[newRow][newCol]);
                         visited[newRow][newCol] = true;
                         paths.push({-maxDepth, {newRow, newCol}});
-                        // cout << newRow << " " << newCol << " " << maxDepth <<endl;
                     }
                 }
             }
@@ -38,9 +37,9 @@ public:
         if(n == 1) return grid[0][0];
         set<int> maxDepthInAllPaths;
         bfs(grid, 0, 0, maxDepthInAllPaths);
-        for(auto num : maxDepthInAllPaths){
-            cout << num <<endl;
-        }
+        // for(auto num : maxDepthInAllPaths){
+        //     cout << num <<endl;
+        // }
         return *begin(maxDepthInAllPaths);
     }
 };
