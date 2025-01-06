@@ -1,6 +1,6 @@
 class Solution {
 public:
-    int dfs(int i, int j, vector<vector<int>>& grid,int &color) {
+    int dfs(int i, int j, vector<vector<int>>& grid,int color) {
     int n = grid.size();
     int m = grid[0].size();
 
