@@ -1,43 +1,57 @@
-class UnionFind {
-public:
-    vector<int> parent;
-    unordered_set<int> unique;
-    int connected;
-    UnionFind(int n){
-        for(int i = 0; i <= n; i ++){
-            parent.push_back(i);
-            connected = 0;
-        }
-    }
-    int find(int u){
-        if(unique.find(u) == unique.end()){
-            unique.insert(u);
-            connected ++;
-        }
-
-        if(parent[u] == u) return u;
-        return parent[u] = find(parent[u]);
-    }
-    void merge(int u, int v){
-        int parentU = find(u);
-        int parentV = find(v);
-        if(parentU != parentV){
-            parent[parentU] = parentV;
-            connected --;
-        }
-    }
-    int getComponent(){
-        return connected;
-    }
-};
 class Solution {
 public:
     int removeStones(vector<vector<int>>& stones) {
-        UnionFind dsu(20001);
-        for(auto stone : stones){
-            int row = stone[0], col = stone[1] + 10001;
-            dsu.merge(row, col);
+        int n = stones.size();
+        UnionFind uf(n);
+
+        // Populate uf by connecting stones that share the same row or column
+        for (int i = 0; i < n; i++) {
+            for (int j = i + 1; j < n; j++) {
+                if (stones[i][0] == stones[j][0] ||
+                    stones[i][1] == stones[j][1]) {
+                    uf.unionNodes(i, j);
+                }
+            }
         }
-        return stones.size() - dsu.getComponent();
+
+        return n - uf.count;
     }
+
+private:
+    // Union-Find data structure for tracking connected components
+    class UnionFind {
+    public:
+        vector<int> parent;  // Array to track the parent of each node
+        int count;           // Number of connected components
+
+        UnionFind(int n) {
+            parent.resize(n, -1);  // Initialize all nodes as their own parent
+            for(int i = 0; i < n; i ++)
+                parent[i] = i;
+            count = n;  // Initially, each stone is its own connected component
+        }
+
+        // Find the root of a node with path compression
+        int find(int node) {
+            if (parent[node] == node) {
+                return node;
+            }
+            return parent[node] = find(parent[node]);
+        }
+
+        // Union two nodes, reducing the number of connected components
+        void unionNodes(int n1, int n2) {
+            int root1 = find(n1);
+            int root2 = find(n2);
+
+            if (root1 == root2) {
+                return;  // If they are already in the same component, do
+                         // nothing
+            }
+
+            // Merge the components and reduce the count of connected components
+            count--;
+            parent[root1] = root2;
+        }
+    };
 };
