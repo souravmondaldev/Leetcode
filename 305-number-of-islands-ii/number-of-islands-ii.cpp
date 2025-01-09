@@ -1,57 +1,53 @@
-class Solution {
-private:
-    vector<int> parent;
-    vector<int> rank;
-    int find(int idx){
-        if(parent[idx] != idx){
-            parent[idx] = find(parent[idx]);
-        }
-        return parent[idx];
-    }
-    bool unionSet(int x, int y){
-        int parentX = find(x);
-        int parentY = find(y);
-        if(parentX != parentY){
-            if(rank[parentX] > rank[parentY]){
-                parent[parentY] = parentX;
-            }
-            else if(rank[parentX] < rank[parentY]){
-                parent[parentX] = parentY;
-            }
-            else {
-                parent[parentX] = parentY;
-                rank[parentY] ++;
-            }
-            return true;
-        }
-        return false;
-    }
+class UnionFind {
 public:
+    vector<int> parent;
+    UnionFind(int n){
+        parent.resize(n);
+        for(int i = 0; i < n; i ++){
+            parent[i] = i;
+        }
+    }
+    int find(int u){
+        if(parent[u] == u) return u;
+        return parent[u] = find(parent[u]);
+    }
+    void mergeIsland(int u, int v){
+        int parentU = find(u), parentV = find(v);
+        if(parentU != parentV){
+            parent[parentU] = parentV;
+        }
+    }
+};
+class Solution {
+public:
+/*
+create n*m grid
+using unionfind to join island in all 4 direction if available
+increment the island whenever new island
+*/
     vector<int> numIslands2(int m, int n, vector<vector<int>>& positions) {
-        parent.resize(m * n, -1);
-        rank.resize(m * n, 0);
-        vector<vector<int>> grid(m, vector<int>(n, 0));
-        vector<vector<int>> directions = {{1, 0}, {-1, 0}, {0, 1}, {0, -1}};
         vector<int> islands;
+        vector<vector<int>> directions = {{-1, 0}, {0, -1}, {1, 0}, {0, 1}};
+        vector<vector<int>> grid(m, vector<int>(n, 0));
+        UnionFind uf(m*n);
         int islandCount = 0;
-        for(auto &pos : positions){
-            int row = pos[0];
-            int col = pos[1];
-            int idx = row * n + col;
-            parent[idx] = idx;
-            if(grid[row][col] == 1){
+        for(auto position : positions){
+            int x = position[0], y = position[1];
+            if(grid[x][y] == 1){
                 islands.push_back(islandCount);
                 continue;
             }
-            grid[row][col] = 1;
             islandCount ++;
-            for(auto &dir : directions){
-                int nRow = row + dir[0];
-                int nCol = col + dir[1];
-                int nIdx = nRow * n + nCol;
-                if(nRow < m && nRow >= 0 && nCol < n && nCol >= 0 && grid[nRow][nCol] == 1){
-                    if(unionSet(idx, nIdx))
+            grid[x][y] = 1;
+            int currentIslandIdx =  x*n + y;
+            for(auto dir : directions){
+                int nextX = x + dir[0], nextY = y + dir[1];
+                if(nextX >= 0 && nextY >= 0 && nextX < m && nextY < n && grid[nextX][nextY] == 1){
+                    int nextIslandIdx =  nextX*n + nextY;
+                    if(uf.find(currentIslandIdx) != uf.find(nextIslandIdx)){
+                        uf.mergeIsland(nextIslandIdx, currentIslandIdx);
                         islandCount --;
+                    }
                 }
             }
             islands.push_back(islandCount);
