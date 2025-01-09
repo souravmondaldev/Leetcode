@@ -1,7 +1,17 @@
+
+class TrieNode {
+public:
+    unordered_map<char, TrieNode*> next;
+    bool isWordEnd;
+    string word;
+    TrieNode(): isWordEnd(false), word("") {}
+};
+
+  
 class Solution {
+    vector<vector<int>> dir = {{-1, 0}, {0, -1}, {1, 0}, {0, 1}};
+
 private:
-    int x[4] = {-1, 1, 0, 0};
-    int y[4] = {0, 0, -1, 1};
     
     bool isSafe(int row, int col, int n, int m) {
         return (row<n && row>=0 && col<m && col>=0);
@@ -16,8 +26,8 @@ private:
         board[row][col] = '#'; 
         bool backTrack = false;
         for(int i=0;i<4;i++) {
-            int currRow = row + x[i];
-            int currCol = col + y[i];
+            int currRow = row + dir[i][0];
+            int currCol = col + dir[i][1];
             
             backTrack = dfs(board, word, currRow, currCol, index+1);
             if(backTrack)
