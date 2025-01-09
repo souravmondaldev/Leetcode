@@ -1,37 +1,39 @@
 class Solution {
 public:
     string alienOrder(vector<string>& words) {
-        if(words.size() == 0)
-            return "";
-        unordered_map<char, int> indegree;
+        if(words.size() == 0) return "";
+
         unordered_map<char, unordered_set<char>> graph;
-        for(int i = 0; i < words.size(); i ++){
-            for(int j = 0; j < words[i].size(); j ++){
-                indegree[words[i][j]] = 0;
+        unordered_map<char, int> indegree;
+        for(string word : words){
+            for(char letter: word){
+                indegree[letter] = 0;
             }
         }
-        for(int i = 0; i < words.size() - 1; i ++){
-            string curr = words[i];
-            string next = words[i + 1];
-            //to check lexographic order
-            if(curr.size() > next.size() && curr.compare(0, next.length(), next) == 0){
+
+        for(int i = 1; i < words.size(); i ++){
+            string prevWord = words[i - 1];
+            string currentWord = words[i];
+            int len = min(prevWord.length(), currentWord.length());
+            if(prevWord.substr(0, len) == currentWord.substr(0, len) && prevWord.length() > currentWord.length()) {
                 return "";
             }
-            int len = min(curr.length(), next.length());
-            for(int j = 0; j < len ; j ++){
-                if(curr[j] != next[j]){
-                    unordered_set<char> st = graph[curr[j]];
-                    if(st.find(next[j]) == st.end()){
-                        graph[curr[j]].insert(next[j]);
-                        indegree[next[j]] ++;
+
+            
+            for(int j = 0; j < len; j++) {
+                if(prevWord[j] != currentWord[j]) {
+                    if(graph[prevWord[j]].find(currentWord[j]) == graph[prevWord[j]].end()) {
+                        graph[prevWord[j]].insert(currentWord[j]);
+                        indegree[currentWord[j]]++;
                     }
                     break;
                 }
+
             }
         }
 
         queue<char> q;
-        for(auto el: indegree){
+        for(auto el : indegree){
             if(el.second == 0){
                 q.push(el.first);
             }
@@ -41,15 +43,16 @@ public:
             char ch = q.front();
             q.pop();
             ans += ch;
-            if(graph[ch].size() != 0){
+            // if(graph[ch].size() != 0){
                 for(char el : graph[ch]){
                     indegree[el] --;
                     if(indegree[el] == 0){
                         q.push(el);
                     }
                 }
-            }
+            // }
         }
+
         return ans.length() == indegree.size() ? ans : "";
     }
 };
