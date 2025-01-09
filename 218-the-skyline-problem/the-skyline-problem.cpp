@@ -13,11 +13,9 @@ public:
             heights.push_back({start, -height});
             heights.push_back({end, height});
         }
-        sort(heights.begin(), heights.end(), [&](auto a, auto b){
-            if (a.first != b.first) return a.first < b.first;
-            return a.second < b.second;
-        });
+        sort(heights.begin(), heights.end());
         for (auto& height : heights) {
+            cout << height.first << " : " << height.second << endl;
             if (height.second < 0) { // Start of building
                 pq.insert(-height.second);
             } else { // End of building
