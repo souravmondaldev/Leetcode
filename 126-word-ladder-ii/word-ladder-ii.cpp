@@ -47,9 +47,9 @@ public:
         q.push(beginWord);
 
         // remove the root word which is the first layer
-        if (wordList.find(beginWord) != wordList.end()) {
-            wordList.erase(wordList.find(beginWord));
-        }
+        // if (wordList.find(beginWord) != wordList.end()) {
+            wordList.erase(beginWord);
+        // }
 
         unordered_map<string, int> isEnqueued;
         isEnqueued[beginWord] = 1;
