@@ -17,10 +17,13 @@ public:
                 int lower_right_x = points[lower_right][0];
                 int lower_right_y = points[lower_right][1];
                 if(lower_right_y > top_left_y) continue;
-                if(lower_right_y > maxY)
+                if(lower_right_y > maxY){
                     ans ++;
-                if(lower_right_y > maxY)
                     maxY = lower_right_y;
+                }
+                    
+                // if(lower_right_y > maxY)
+                //     maxY = lower_right_y;
             }
         }
         return ans;
