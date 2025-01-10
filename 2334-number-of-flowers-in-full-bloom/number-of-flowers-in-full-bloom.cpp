@@ -10,14 +10,19 @@ public:
         }
         vector<int> pos, prefix;
         int curr = 0;
+        int idx = 0;
         for(auto bloom : bloomOrder){
             pos.push_back(bloom.first);
             curr += bloom.second;
             prefix.push_back(curr);
+            // cout << idx << " : " << pos[idx] << " : " << prefix[idx] <<endl;
+            idx ++;
+            
         }
         vector<int> ans;
         for(int person : people){
             int i = upper_bound(pos.begin(), pos.end(), person) - pos.begin() - 1;
+            // cout << i << endl;
             ans.push_back(prefix[i]);
         }
         return ans;
