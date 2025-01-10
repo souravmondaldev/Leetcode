@@ -1,37 +1,37 @@
 class Solution {
-private: 
-    long halfPalindrome(long num, bool even){
-        long res = num;
-        if(!even)
-            num = num / 10;
-        while(num > 0){
-            res = res * 10 + num % 10;
-            num = num /10;
-        }
-        return res;
-    }
 public:
-    string nearestPalindromic(string n) {
-        int len = n.length();
-        int i = len % 2 == 0 ? len / 2 - 1: len / 2;
-        long firstHalf = stol(n.substr(0, i + 1));
-        vector<long> possibilities;
-        possibilities.push_back((long)pow(10, len - 1) - 1);
-        possibilities.push_back((long)pow(10, len) + 1);
-        possibilities.push_back(halfPalindrome(firstHalf, len % 2 == 0));
-        possibilities.push_back(halfPalindrome(firstHalf - 1, len % 2 == 0));
-        possibilities.push_back(halfPalindrome(firstHalf + 1, len % 2 == 0));
+    long halfPalindrome(long left, bool even) {
+        long result = left;
+        if (!even) {
+            left /= 10;
+        }
+        while (left) {
+            result = result * 10 + left % 10;
+            left /= 10;
+        }
+        return result;
+    }
 
-        long diff = LONG_MAX, res = 0, nl = stol(n);
-        for(auto possible : possibilities){
-            if(possible == nl)
+    string nearestPalindromic(string s) {
+        int n = s.length();
+        int len = n % 2 == 0 ? n / 2  : n / 2 + 1;
+        vector<long long> pos;
+        long half = stol(s.substr(0, len));
+        
+        pos.push_back(halfPalindrome(half, n % 2 == 0));
+        pos.push_back(halfPalindrome(half + 1, n % 2 == 0));
+        pos.push_back(halfPalindrome(half - 1, n % 2 == 0));
+        pos.push_back(stol("1" + string(n - 1, '0')) - 1);
+        pos.push_back(stol("1" + string(n, '0')) + 1);
+
+        long diff = LONG_MAX, res = 0, sl = stol(s);
+        for (auto item : pos) {
+            if (item == sl) {
                 continue;
-            if(abs(possible - nl) < diff){
-                diff = abs(possible - nl);
-                res = possible;
             }
-            else if(abs(possible - nl) == diff){
-                res = min(res, possible);
+            if (abs(item - sl) < diff || (abs(item - sl) == diff && item < res)) {
+                diff = abs(item - sl);
+                res = item;
             }
         }
         return to_string(res);
