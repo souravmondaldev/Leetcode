@@ -19,6 +19,9 @@ public:
     }
     int largestComponentSize(vector<int>& nums) {
         parent.resize(100005, 0);
+        for(int i = 0; i < 100005; i ++){
+            parent[i] = i;
+        }
         rank.resize(100005, 1);
         for(int i = 0; i < 100005; i ++){
             parent[i] = i;
