@@ -31,7 +31,7 @@ public:
         for(Node* node : tree){
             if(!seen.count(node->val)){
                 root = node;
-                break;
+                // break;
             }
         }
         return root;
