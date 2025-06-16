@@ -1,73 +1,55 @@
 class Excel {
     vector<vector<int>> grid;
-    vector<vector<vector<pair<int, int>>>> cellObservers;
-    vector<vector<vector<pair<int, int>>>> observerCells;
+    vector<vector<vector<pair<int, int>>>> dependents; // who depends on me
+    vector<vector<vector<pair<int, int>>>> dependencies; // who I depend on
 
-    // Convert "A1" to (row=0, col=0)
     pair<int, int> parseCell(const string& s) {
         int col = s[0] - 'A';
         int row = stoi(s.substr(1)) - 1;
         return {row, col};
     }
 
-    // Convert "A1:B2" or "C3" into cell range
-    vector<pair<int, int>> getCellsFromRange(const string& s) {
-        if (s.find(':') == string::npos) {
-            return {parseCell(s)};
-        }
-        auto p1 = parseCell(s.substr(0, s.find(':')));
-        auto p2 = parseCell(s.substr(s.find(':') + 1));
-        vector<pair<int, int>> cells;
-        for (int i = p1.first; i <= p2.first; ++i) {
-            for (int j = p1.second; j <= p2.second; ++j) {
-                cells.push_back({i, j});
-            }
-        }
-        return cells;
+    vector<pair<int, int>> getCells(const string& s) {
+        if (s.find(':') == string::npos) return {parseCell(s)};
+        auto left = parseCell(s.substr(0, s.find(':')));
+        auto right = parseCell(s.substr(s.find(':') + 1));
+        vector<pair<int, int>> res;
+        for (int r = left.first; r <= right.first; ++r)
+            for (int c = left.second; c <= right.second; ++c)
+                res.emplace_back(r, c);
+        return res;
     }
 
     void clearDependencies(int r, int c) {
-        for (auto& dep : observerCells[r][c]) {
-            auto& observers = cellObservers[dep.first][dep.second];
-            observers.erase(remove(observers.begin(), observers.end(), make_pair(r, c)), observers.end());
+        for (auto& [dr, dc] : dependencies[r][c]) {
+            auto& v = dependents[dr][dc];
+            v.erase(remove(v.begin(), v.end(), make_pair(r, c)), v.end());
         }
-        observerCells[r][c].clear();
+        dependencies[r][c].clear();
     }
 
-    void updateCell(int r, int c, int val, bool override) {
-        if (override) clearDependencies(r, c);
-        int delta = val - grid[r][c];
-        grid[r][c] = val;
-        for (auto& observer : cellObservers[r][c]) {
-            updateCell(observer.first, observer.second, grid[observer.first][observer.second] + delta, false);
+    void propagate(int r, int c, int newVal, bool resetDeps) {
+        int delta = newVal - grid[r][c];
+        grid[r][c] = newVal;
+        if (resetDeps) clearDependencies(r, c);
+        for (auto& [dr, dc] : dependents[r][c]) {
+            int sum = 0;
+            for (auto& [sr, sc] : dependencies[dr][dc])
+                sum += grid[sr][sc];
+            propagate(dr, dc, sum, false);
         }
-    }
-
-    int setSum(int r, int c, const vector<string>& numbers) {
-        clearDependencies(r, c);
-        int total = 0;
-        for (auto& range : numbers) {
-            auto cells = getCellsFromRange(range);
-            for (auto& [i, j] : cells) {
-                total += grid[i][j];
-                cellObservers[i][j].push_back({r, c});
-                observerCells[r][c].push_back({i, j});
-            }
-        }
-        updateCell(r, c, total, false);
-        return total;
     }
 
 public:
     Excel(int height, char width) {
-        int cols = width - 'A' + 1;
-        grid = vector<vector<int>>(height, vector<int>(cols));
-        cellObservers = vector<vector<vector<pair<int, int>>>>(height, vector<vector<pair<int, int>>>(cols));
-        observerCells = vector<vector<vector<pair<int, int>>>>(height, vector<vector<pair<int, int>>>(cols));
+        int w = width - 'A' + 1;
+        grid = vector<vector<int>>(height, vector<int>(w, 0));
+        dependents = vector<vector<vector<pair<int, int>>>>(height, vector<vector<pair<int, int>>>(w));
+        dependencies = vector<vector<vector<pair<int, int>>>>(height, vector<vector<pair<int, int>>>(w));
     }
 
     void set(int row, char column, int val) {
-        updateCell(row - 1, column - 'A', val, true);
+        propagate(row - 1, column - 'A', val, true);
     }
 
     int get(int row, char column) {
@@ -75,6 +57,18 @@ public:
     }
 
     int sum(int row, char column, vector<string> numbers) {
-        return setSum(row - 1, column - 'A', numbers);
+        int r = row - 1, c = column - 'A';
+        clearDependencies(r, c);
+        int total = 0;
+        for (const string& s : numbers) {
+            auto cells = getCells(s);
+            for (auto& [sr, sc] : cells) {
+                dependencies[r][c].emplace_back(sr, sc);
+                dependents[sr][sc].emplace_back(r, c);
+                total += grid[sr][sc];
+            }
+        }
+        propagate(r, c, total, false);
+        return total;
     }
 };
