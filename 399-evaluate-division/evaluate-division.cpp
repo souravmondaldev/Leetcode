@@ -13,7 +13,7 @@ public:
         for(int i = 0; i < queries.size(); i ++){
             string from = queries[i][0];
             string to = queries[i][1];
-            unordered_set<string> visited;
+            // unordered_set<string> visited;
             if (graph.find(from) == graph.end() || graph.find(to) == graph.end()) {
                 answer.push_back(-1.0);
             } else {
