@@ -29,7 +29,7 @@ class Excel {
     }
 
     void propagate(int r, int c, int newVal, bool resetDeps) {
-        int delta = newVal - grid[r][c];
+        // int delta = newVal - grid[r][c];
         grid[r][c] = newVal;
         if (resetDeps) clearDependencies(r, c);
         for (auto& [dr, dc] : dependents[r][c]) {
