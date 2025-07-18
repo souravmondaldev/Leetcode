@@ -7,7 +7,7 @@ public:
                 result += ch;
             }
             else if(ch == '*' && result.size()){
-                result = result.substr(0, result.size() - 1);
+                result.pop_back();
             }
             else if(ch == '#'){
                 result += result;
