@@ -1,6 +1,6 @@
 class Solution {
 public:
-    int p1, p2;
+    int p1=0, p2=0;
     int getMin(vector<int> &a, vector<int> &b){
         if(p1 < a.size() && p2 < b.size()){
             return a[p1] < b[p2] ? a[p1++] : b[p2++];
