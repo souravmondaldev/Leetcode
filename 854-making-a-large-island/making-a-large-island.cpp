@@ -1,90 +1,80 @@
 class Solution {
 public:
-    int dfs(int i, int j, vector<vector<int>>& grid,int color) {
-    int n = grid.size();
-    int m = grid[0].size();
+    vector<vector<int>> directions = {{0, 1}, {1, 0}, {-1, 0}, {0, -1}};
+    void bfs(vector<vector<int>>& grid, unordered_map<int, int>& colorCount,
+             int row, int col, int color) {
+        queue<pair<int, int>> q;
 
-    if(i < 0 || j < 0 || i >= n || j >= m)//invalid case
-         return 0;
-    
-    if(grid[i][j] == 0 || grid[i][j] ==  color)//invalid case
-         return 0;
-    
-    grid[i][j] = color;//just assign the value of color to all adjacent 1's of grid and increment the count everytime
-    
-    int count = 1;
-    count += dfs(i + 1, j, grid,color);
-    count += dfs(i - 1, j , grid,color);
-    count += dfs(i, j + 1, grid,color);
-    count += dfs(i, j - 1, grid,color);
-    
-    return count;
-}
-
-int largestIsland(vector<vector<int>>& grid) {
-    int n = grid.size();
-    int m = grid[0].size();
-    unordered_map<int,int>mp;
-
-    int color=2;
-
-    for(int i = 0; i < n; i++)
-     {
-        for(int j = 0; j < m; j++)
-        {
-            if(grid[i][j] == 1)
-            {
-                int count = dfs(i, j, grid,color);//insert the value of particular area in map with its 1's count
-                    mp[color] = count;
+        q.push({row, col});
+        grid[row][col] = color;
+        colorCount[color]++;
+        while (!q.empty()) {
+            int size = q.size();
+            while (size--) {
+                auto top = q.front();
+                q.pop();
+                for (auto direction : directions) {
+                    int newRow = top.first + direction[0];
+                    int newCol = top.second + direction[1];
+                    if (newRow >= 0 && newCol >= 0 && newRow < grid.size() &&
+                        newCol < grid[0].size() && grid[newRow][newCol] == 1) {
+                        q.push({newRow, newCol});
+                        grid[newRow][newCol] = color;
+                        colorCount[color]++;
+                    }
+                }
+            }
+        }
+    }
+    int largestIsland(vector<vector<int>>& grid) {
+        int n = grid.size();
+        int m = grid[0].size();
+        int color = 2;
+        unordered_map<int, int> colorCount;
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < m; j++) {
+                if (grid[i][j] == 1) {
+                    bfs(grid, colorCount, i, j, color);
                     color++;
-                 
+                }
             }
         }
-    }
-    int result=0;
-    for(int i=0;i<n;i++)
-    {
-        for(int j=0;j<m;j++)
-        {
-            if(grid[i][j]==0)
-            {
-                set<int> st;//here i use set because we want to store connected values of different color counts,checking all the adjacent values
-                
-                if(i-1>=0 && grid[i-1][j]!=0)
-                {
-                    st.insert(grid[i-1][j]);
-                }
-                if(i+1<n && grid[i+1][j]!=0) 
-                {
-                    st.insert(grid[i+1][j]);
-                }
-                if(j-1>=0 && grid[i][j-1]!=0) 
-                {
-                    st.insert(grid[i][j-1]);
-                }
-                if(j+1<m && grid[i][j+1]!=0) 
-                {
-                    st.insert(grid[i][j+1]);
-                }
-                
-                int sum = 1;
-                for(auto i:st)
-                    sum += mp[i];
-                
-                result = max(result, sum);
-                
-            }
-
+        int maxIsland = 0;
+        for (auto [color, count] : colorCount) {
+            maxIsland = max(maxIsland, count);
         }
-    }
-    if(result==0)
-    {
-        return n*m;
-    }
-    else{
-        return result;
-    }
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < m; j++) {
+                if (grid[i][j] == 0) {
+                    cout << "going here" << endl;
+                    int island = 1;
+                    unordered_set<int> seenColors;
+                    for (auto dir : directions) {
 
-}
-
+                        int row = dir[0] + i, col = dir[1] + j;
+                        if (row >= 0 && col >= 0 && row < grid.size() &&
+                            col < grid[0].size() && grid[row][col] != 0 &&
+                            seenColors.find(grid[row][col]) ==
+                                seenColors.end()) {
+                            if (row >= 0 && col >= 0 && row < n && col < m &&
+                                grid[row][col] != 0) {
+                                int neighborColor = grid[row][col];
+                                // Only add the island's area if we haven't seen
+                                // its color before
+                                if (seenColors.find(neighborColor) ==
+                                    seenColors.end()) {
+                                    island += colorCount[neighborColor];
+                                    seenColors.insert(neighborColor);
+                                }
+                            }
+                        }
+                    }
+                    maxIsland = max(maxIsland, island);
+                }
+            }
+        }
+        if (colorCount.empty())
+            return 1;
+        return maxIsland;
+    }
 };
