@@ -1,22 +1,21 @@
 class MovingAverage {
     deque<int> window;
     int windowSize;
-    double movingAverage;
+    int movingSum;
 public:
     MovingAverage(int size) {
         windowSize = size;
-        movingAverage = 0.0;
+        movingSum = 0;
     }
     
     double next(int val) {
-        movingAverage += val;
         window.push_back(val);
-        if(window.size() == windowSize + 1){
-            movingAverage -= window.front();
+        movingSum += val;
+        if(window.size() > windowSize){
+            movingSum -= window.front();
             window.pop_front();
         }
-        return movingAverage / window.size();
-
+        return (double)movingSum/window.size();
     }
 };
 
