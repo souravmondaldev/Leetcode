@@ -1,5 +1,6 @@
 class Solution {
 public:
+    // O(logn) O(1)
     int searchInsert(vector<int>& nums, int target) {
         int left = 0, right = nums.size() - 1;
         while(left <= right){
