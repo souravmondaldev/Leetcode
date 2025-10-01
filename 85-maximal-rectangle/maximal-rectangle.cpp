@@ -25,19 +25,25 @@ public:
     }
     int maximalRectangle(vector<vector<char>>& matrix) {
         int n = matrix.size(), m = matrix[0].size();
-        vector<vector<int>> grid(n, vector<int>(m, 0));
-        for(int i = 0; i < n; i ++){
-            for(int j = 0; j < m; j ++){
-                grid[i][j] = matrix[i][j] - '0';
-                if(i != 0 && grid[i][j] != 0){
-                    grid[i][j] += grid[i-1][j];
-                }
-            }
-        }
+        vector<int> grid(m, 0);
         int maxArea = 0;
         for(int i = 0; i < n; i ++){
-            maxArea = max(maxArea, largestArea(grid[i]));
+            for(int j = 0; j < m; j ++){
+                if(matrix[i][j] == '1'){
+                    grid[j] ++;
+                }
+                else grid[j] = 0;
+                // grid[i][j] = matrix[i][j] - '0';
+                // if(i != 0 && grid[i][j] != 0){
+                //     grid[i][j] += grid[i-1][j];
+                // }
+            }
+            maxArea = max(maxArea, largestArea(grid));
         }
+        
+        // for(int i = 0; i < n; i ++){
+        //     maxArea = max(maxArea, largestArea(grid[i]));
+        // }
         return maxArea;
     }
 };
