@@ -20,6 +20,8 @@ public:
 
         vector<int> finalOrder;
         while (!q.empty()) {
+            int size = q.size();
+            while(size --){
             int currentCourse = q.front();
             q.pop();
             finalOrder.push_back(currentCourse);
@@ -30,6 +32,7 @@ public:
                         q.push(nextCourse);
                     }
                 }
+            }
             }
         }
 
