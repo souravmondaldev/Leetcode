@@ -11,8 +11,9 @@ public:
                 while(mp1[order[i]] > 0){
                     ans += order[i];
                     mp1[order[i]] --;
-                    mp2[order[i]] ++;
+                    
                 }
+                mp2[order[i]] ++;
             }
         }
         for(int i = 0; i < s.length(); i ++){
