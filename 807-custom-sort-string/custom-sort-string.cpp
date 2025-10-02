@@ -8,7 +8,7 @@ public:
 
         for(int i = 0; i < order.size(); i ++){
             if(mp1.find(order[i]) != mp1.end()){
-                while(mp1[order[i]]){
+                while(mp1[order[i]] > 0){
                     ans += order[i];
                     mp1[order[i]] --;
                     mp2[order[i]] ++;
