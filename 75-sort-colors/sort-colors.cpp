@@ -16,20 +16,21 @@ public:
                     break;
             }
         }
-        while( redCount ){
-            nums[i]=0;
-            i++;
-            redCount --;
-        }
-        while( whiteCount ){
-            nums[i]=1;
-            i++;
-            whiteCount --;
-        }
-        while( blueCount ){
-            nums[i] = 2;
-            i++;
-            blueCount --;
+        for(int i = 0; i < nums.size(); i ++){
+            if(redCount > 0){
+                nums[i] = 0;
+                redCount --;
+                continue;
+            }
+            if(whiteCount > 0){
+                nums[i] = 1;
+                whiteCount --;
+                continue;
+            }
+            if(blueCount > 0){
+                nums[i] = 2;
+                blueCount --;
+            }
         }
     }
 };
