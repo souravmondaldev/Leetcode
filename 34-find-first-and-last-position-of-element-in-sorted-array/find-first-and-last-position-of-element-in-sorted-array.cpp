@@ -12,7 +12,7 @@ public:
                     right = mid - 1;
                 }
                 else{
-                    if(mid == right || nums[mid + 1] != target)
+                    if(mid == n - 1 || nums[mid + 1] != target)
                         return mid;
                     left = mid + 1;
                 }
