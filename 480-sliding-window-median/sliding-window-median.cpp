@@ -39,11 +39,11 @@ public:
 
     void rebalance() {
         // Ensure size condition: |minHalf| >= |maxHalf| and diff <= 1
-        while ((int)minHalf.size() > (windowSize + 1) / 2) {
+        if ((int)minHalf.size() > (windowSize + 1) / 2) {
             maxHalf.insert(*prev(minHalf.end()));
             minHalf.erase(prev(minHalf.end()));
         }
-        while ((int)minHalf.size() < (windowSize + 1) / 2 && !maxHalf.empty()) {
+        if ((int)minHalf.size() < (windowSize + 1) / 2 && !maxHalf.empty()) {
             minHalf.insert(*maxHalf.begin());
             maxHalf.erase(maxHalf.begin());
         }
