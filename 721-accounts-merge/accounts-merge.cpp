@@ -2,8 +2,8 @@ class UnionFind {
 public:
     vector<int> parent;
     UnionFind(int n){
-        parent.resize(n + 1);
-        for(int i = 0; i <= n; i ++){
+        parent.resize(n);
+        for(int i = 0; i < n; i ++){
             parent[i] = i;
         }
     }
