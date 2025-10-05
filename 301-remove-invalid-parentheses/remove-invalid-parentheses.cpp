@@ -1,43 +1,52 @@
 class Solution {
 public:
-    unordered_map<string, int> seen;
-    int getMinValid(string s){
-        stack<char> st;
-        int i = 0;
-        while(i < s.length()){
-            if(s[i] == '(')
-                st.push('(');
-            else if(s[i] == ')') {
-                if(!st.empty() && st.top() == '('){
-                    st.pop();
-                }
-                else st.push(')');
+    bool isValid(const string &s) {
+        int count = 0;
+        for (char c : s) {
+            if (c == '(') count++;
+            else if (c == ')') {
+                if (count == 0) return false;
+                count--;
             }
-            i ++;
         }
-        return st.size();
+        return count == 0;
     }
-    void backtrac(string s, vector<string>&ans, int minInvalid){
-        if(seen[s]) return;
-        else seen[s] ++;
-        if(minInvalid == 0){
-            if(getMinValid(s) == 0){
-                ans.push_back(s);
-                return;
-            }
-            return;
-        }
-        for(int i = 0; i < s.length(); i ++){
-            string left = s.substr(0, i);
-            string right = s.substr(i+1);
-            backtrac(left+right, ans, minInvalid-1);
-        }
-        return;
-    }
+
     vector<string> removeInvalidParentheses(string s) {
-        int minInvalid = getMinValid(s);
-        vector<string> ans;
-        backtrac(s, ans, minInvalid);
-        return ans;
+        vector<string> res;
+        unordered_set<string> visited;
+        queue<string> q;
+        q.push(s);
+        visited.insert(s);
+        bool found = false;
+
+        while (!q.empty()) {
+            int size = q.size();
+            for (int i = 0; i < size; i++) {
+                string str = q.front(); q.pop();
+
+                if (isValid(str)) {
+                    res.push_back(str);
+                    found = true; // found minimum removal
+                }
+
+                if (found) continue; // skip generating next level
+
+                for (int j = 0; j < str.size(); j++) {
+                    if (!isalpha(str[j]) && str[j] != '(' && str[j] != ')') continue;
+
+                    if (str[j] == '(' || str[j] == ')') {
+                        string next = str.substr(0, j) + str.substr(j + 1);
+                        if (!visited.count(next)) {
+                            q.push(next);
+                            visited.insert(next);
+                        }
+                    }
+                }
+            }
+            if (found) break; // stop BFS at first valid level
+        }
+
+        return res;
     }
 };
