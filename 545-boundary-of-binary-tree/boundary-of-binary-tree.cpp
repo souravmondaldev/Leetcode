@@ -23,6 +23,7 @@ public:
 
         return boundary;
     }
+ 
 
 private:
     bool isLeaf(TreeNode* node) {
