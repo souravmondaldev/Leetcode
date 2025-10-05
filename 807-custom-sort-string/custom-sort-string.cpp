@@ -1,27 +1,19 @@
 class Solution {
 public:
     string customSortString(string order, string s) {
-        string ans = "";
-        unordered_map<char, int> mp1;
-        unordered_set<char> mp2;
-        for(int i = 0; i < s.length(); i ++)
-            mp1[s[i]] ++;
+        std::unordered_map<char, int> freqs;
+        for (char ch : s)
+            freqs[ch]++;
 
-        for(int i = 0; i < order.size(); i ++){
-            if(mp1.find(order[i]) != mp1.end()){
-                while(mp1[order[i]] > 0){
-                    ans += order[i];
-                    mp1[order[i]] --;
-                }
-                mp2.insert(order[i]);
-            }
-        }
-        for(int i = 0; i < s.length(); i ++){
-            if(mp2.find(s[i]) == mp2.end()){
-                ans += s[i];
-            }
+        std::string result;
+        for (char ch : order) {
+            result += std::string(freqs[ch], ch);
+            freqs.erase(ch);
         }
 
-        return ans;
+        for (auto [ch, freq] : freqs)
+            result += std::string(freq, ch);
+
+        return result;
     }
 };
