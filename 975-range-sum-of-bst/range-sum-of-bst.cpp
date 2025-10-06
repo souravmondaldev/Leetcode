@@ -20,6 +20,24 @@ public:
         return validRangeSumSoFar + getSum(root->left, low, high) + getSum(root->right, low, high);
     }
     int rangeSumBST(TreeNode* root, int low, int high) {
-        return getSum(root,low,high);
+        // return getSum(root,low,high);
+        double sum = 0;
+        double count = 0;
+        std::stack<TreeNode*> stack;
+        stack.push(root);
+        while (!stack.empty()) {
+            auto curr = stack.top();
+            stack.pop();
+            if (curr->val >= low && curr->val <= high) {
+                sum += curr->val;
+                count++;
+            }
+
+            if (curr->right != nullptr && curr->val < high)
+                stack.push(curr->right);
+            if (curr->left != nullptr && curr->val > low)
+                stack.push(curr->left);
+        }
+        return sum ;
     }
 };
