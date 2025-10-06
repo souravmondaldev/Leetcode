@@ -33,9 +33,9 @@ public:
                 count++;
             }
 
-            if (curr->right != nullptr && curr->val < high)
+            if (curr->right != nullptr && curr->val <= high)
                 stack.push(curr->right);
-            if (curr->left != nullptr && curr->val > low)
+            if (curr->left != nullptr && curr->val >= low)
                 stack.push(curr->left);
         }
         return sum ;
